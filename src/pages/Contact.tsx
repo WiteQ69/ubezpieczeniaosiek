@@ -8,10 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import React, { useState } from "react";
+import { useForm } from "@formspree/react";
 
 const Contact = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, formspreeSubmit] = useForm("mgoevana");
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
