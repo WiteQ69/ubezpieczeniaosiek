@@ -13,28 +13,44 @@ const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      message: formData.get("message"),
-    };
-
-    console.log("Form data:", data);
-
-    setTimeout(() => {
-      toast({
-        title: "Dziękujemy za wiadomość!",
-        description: "Skontaktujemy się z Tobą wkrótce.",
+    try {
+      const formData = new FormData(e.currentTarget);
+      const response = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
       });
+
+      if (response.ok) {
+        toast({
+          title: "Wiadomość wysłana!",
+          description: "Dziękujemy — odezwiemy się jak najszybciej.",
+        });
+        (e.target as HTMLFormElement).reset();
+      } else {
+        toast({
+          title: "Błąd wysyłania",
+          description: "Sprawdź pola i spróbuj ponownie.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Błąd wysyłania",
+        description: "Sprawdź pola i spróbuj ponownie.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+    }
   };
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -56,56 +72,65 @@ const Contact = () => {
           {/* 3 kolumny jak w HTML */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             {/* 1) Formularz */}
-            <div className="h-full">
-              <Card className="h-full flex flex-col">
-                <CardHeader>
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <Mail className="h-5 w-5" />
-                    Formularz kontaktowy
-                  </CardTitle>
-                </CardHeader>
+<div className="h-full">
+  <Card className="h-full flex flex-col">
+    <CardHeader>
+      <CardTitle className="text-2xl flex items-center gap-2">
+        <Mail className="h-5 w-5" />
+        Formularz kontaktowy
+      </CardTitle>
+    </CardHeader>
 
-                <CardContent className="flex-1">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Imię i nazwisko *</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        placeholder="Wprowadź swoje imię i nazwisko"
-                        required
-                      />
-                    </div>
+    <CardContent className="flex-1">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* temat maila */}
+        <input type="hidden" name="_subject" value="FORMULARZ KONTAKTOWY - NOWA WIADOMOŚĆ" />
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Numer telefonu *</Label>
-                      <Input id="phone" name="phone" type="tel" required />
-                    </div>
+        <div className="space-y-2">
+          <Label htmlFor="name">Imię i nazwisko *</Label>
+          <Input
+            id="name"
+            name="IMIĘ I NAZWISKO"
+            placeholder="Wprowadź swoje imię i nazwisko"
+            required
+          />
+        </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Wiadomość *</Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        placeholder="Opisz swoje pytanie lub zainteresowanie..."
-                        required
-                        rows={6}
-                        className="resize-none"
-                      />
-                    </div>
+        <div className="space-y-2">
+          <Label htmlFor="phone">Numer telefonu *</Label>
+          <Input
+            id="phone"
+            name="NUMER TELEFONU"
+            type="tel"
+            required
+          />
+        </div>
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-zinc-900 hover:bg-zinc-800 text-white h-11"
-                      disabled={isSubmitting}
-                    >
-                      <Send className="h-5 w-5 mr-2" />
-                      {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </div>
+        <div className="space-y-2">
+          <Label htmlFor="message">Wiadomość *</Label>
+          <Textarea
+            id="message"
+            name="WIADOMOŚĆ"
+            placeholder="Opisz swoje pytanie lub zainteresowanie..."
+            required
+            rows={6}
+            className="resize-none"
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-zinc-900 hover:bg-zinc-800 text-white h-11"
+          disabled={isSubmitting}
+        >
+          <Send className="h-5 w-5 mr-2" />
+          {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
+        </Button>
+      </form>
+    </CardContent>
+  </Card>
+</div>
+
 
             {/* 2) Info kontaktowe */}
             <div className="h-full">
@@ -134,8 +159,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-zinc-900">Email</p>
-                      <a href="mailto:sigma@gmail.com" className="text-zinc-600 hover:underline">
-                        sigma@gmail.com
+                      <a href="mailto:sigmaosiek@gmail.com" className="text-zinc-600 hover:underline">
+                        sigmaosiek@gmail.com
                       </a>
                     </div>
                   </div>
