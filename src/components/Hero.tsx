@@ -95,7 +95,7 @@ const Hero = () => {
 
               {/* karta info na obrazku */}
               <Link
-                to="/wizyta-online"
+                to="https://teams.live.com/v2/meet/meet-now?source=gather&launchAgent=gather&correlationId=5abb3b2f-7473-42f4-8b1d-12ec9ef5b430"
                 className="absolute -bottom-8 -left-4 bg-background border rounded-3xl shadow-lg px-7 py-4 w-60 block hover:scale-[1.02] hover:shadow-xl transition-all text-left"
               >
                 <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
